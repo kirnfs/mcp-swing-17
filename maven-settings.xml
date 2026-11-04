@@ -1,0 +1,4 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0">
+  <!-- Пустые настройки: не наследуем прокси NetBeans из %USERPROFILE%\.m2\settings.xml. -->
+  <mirrors/>
+</settings>

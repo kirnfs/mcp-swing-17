@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>solutions.crosstech</groupId>
+        <artifactId>mcp-swing-17</artifactId>
+        <version>1.5.0-java17</version>
+    </parent>
+
+    <artifactId>mcp-swing-17-agent</artifactId>
+    <packaging>jar</packaging>
+    <description>Java agent loaded into Swing or JavaFX JVMs (at launch or by PID); one UiToolkit per toolkit</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>solutions.crosstech</groupId>
+            <artifactId>mcp-swing-17-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <!-- JavaFX is an OPTIONAL target toolkit: compiled against, never bundled.
+             The agent is attached to someone else's application, so it must load
+             and run unchanged when JavaFX is absent. ToolkitRegistry resolves
+             JavaFxToolkit by name only after probing for javafx.application.Platform. -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <!-- Tests deliberately exercise the explicit Robot path. -->
+                        <swing.mcp.allow.robot>true</swing.mcp.allow.robot>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Agent-Class>solutions.crosstech.swingmcp.agent.SwingMcpAgent</Agent-Class>
+                            <Premain-Class>solutions.crosstech.swingmcp.agent.SwingMcpAgent</Premain-Class>
+                            <Can-Retransform-Classes>false</Can-Retransform-Classes>
+                            <Can-Redefine-Classes>false</Can-Redefine-Classes>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>shade</goal></goals>
+                        <configuration>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.fasterxml.jackson</pattern>
+                                    <shadedPattern>solutions.crosstech.swingmcp.agent.shaded.jackson</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Agent-Class>solutions.crosstech.swingmcp.agent.SwingMcpAgent</Agent-Class>
+                                        <Premain-Class>solutions.crosstech.swingmcp.agent.SwingMcpAgent</Premain-Class>
+                                        <Can-Retransform-Classes>false</Can-Retransform-Classes>
+                                        <Can-Redefine-Classes>false</Can-Redefine-Classes>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

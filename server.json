@@ -1,0 +1,11 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.kirnfs/mcp-swing-17",
+  "title": "mcp-swing-17",
+  "description": "Java 17 MCP server and agent for automating Swing and JavaFX desktop applications.",
+  "repository": {
+    "url": "https://github.com/kirnfs/mcp-swing-17",
+    "source": "github"
+  },
+  "version": "1.5.0-java17"
+}

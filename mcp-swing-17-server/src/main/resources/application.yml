@@ -1,0 +1,23 @@
+spring:
+  main:
+    web-application-type: none
+    banner-mode: off
+  ai:
+    mcp:
+      server:
+        name: mcp-swing-17
+        version: "@project.version@"
+        stdio: true
+
+swing:
+  mcp:
+    agent-port-min: 40000
+    agent-port-max: 40100
+    agent-jar: ${SWING_MCP_AGENT_JAR:}
+    screenshot-dir: ${java.io.tmpdir}/swing-mcp-screenshots
+    tool-timeout-ms: 30000
+    evaluate:
+      enabled: false
+
+# Logging is configured in logback-spring.xml (file only - stdout carries the
+# MCP stdio protocol and must stay clean).

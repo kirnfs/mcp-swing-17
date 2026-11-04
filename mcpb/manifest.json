@@ -1,0 +1,111 @@
+{
+  "manifest_version": "0.3",
+  "name": "mcp-swing-17",
+  "display_name": "mcp-swing-17",
+  "version": "1.5.0-java17",
+  "description": "Java 17 MCP server and agent for automating Swing and JavaFX desktop applications.",
+  "long_description": "**Swing MCP gives AI assistants hands inside Java desktop applications** — Swing and JavaFX alike: the ERP clients, point-of-sale screens, lab and logistics tools and internal apps that run a lot of businesses and have no API.\n\nOnce the bundled agent is loaded into the app's JVM (at launch, or by attaching to a running process by PID), Claude can:\n\n- **Work with either toolkit**: Swing, JavaFX, or an application that mixes both in one JVM (a `JFXPanel` inside a Swing frame). The tools are the same either way — you never name a toolkit.\n- **See the UI** as a structured component tree — every button, field, table, tree, menu and dialog with a stable id — instead of guessing from pixels.\n- **Act in it**: click, type, fill fields and spinners, pick combo-box options, select table cells and tree nodes, drive menus and right-click menus, drag, scroll, turn the mouse wheel (zoom and pan custom canvases), press keys.\n- **Read data out**: whole table contents, list and tree items, component details, the clipboard, and screenshots of a window or a single component.\n- **Handle the awkward parts**: modal dialogs are detected and answered instead of blocking the session; `wait_for` waits for UI conditions; several apps can be driven in parallel sessions.\n\n**Who it's for:** teams that maintain or test Java desktop software, and anyone who wants an assistant to operate a desktop app that was never built for automation. Typical uses: exploratory and regression UI testing, reproducing bugs, extracting data from screens, and automating repetitive clicks in legacy tools.\n\n**Requirements:** Java 17+ (JDK 17 recommended) on your `PATH`. Works on macOS, Windows and Linux. The agent listens on loopback only, requires a per-session token, and `evaluate_java` (arbitrary code in the target JVM) is off unless you switch it on.\n\n**Get started:** ask Claude to `launch_app` with the path to your app's jar (or `attach_to_app` with a running PID), then `take_snapshot` and take it from there. Full tool reference, per-client setup and a demo: https://crosstech.solutions/swing-mcp\n\nOpen source (MIT). Forked from Swing MCP; Java 17 port maintained by the mcp-swing-17 project.",
+  "author": {
+    "name": "CrossTech Solutions",
+    "url": "https://github.com/crosstech-solutions-bv"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kirnfs/mcp-swing-17.git"
+  },
+  "homepage": "https://crosstech.solutions/swing-mcp",
+  "documentation": "https://github.com/kirnfs/mcp-swing-17/blob/main/docs/tool-reference.md",
+  "support": "https://github.com/kirnfs/mcp-swing-17/issues",
+  "icon": "assets/icon.png",
+  "icons": [
+    { "src": "assets/icon.png", "size": "512x512" },
+    { "src": "assets/icon-256.png", "size": "256x256" }
+  ],
+  "screenshots": [
+    "assets/screenshot-forms.png",
+    "assets/screenshot-table.png",
+    "assets/screenshot-dialog.png",
+    "assets/screenshot-fx-forms.png",
+    "assets/screenshot-fx-table.png",
+    "assets/screenshot-fx-dialog.png"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "swing",
+    "javafx",
+    "java",
+    "java-swing",
+    "java-desktop",
+    "desktop",
+    "ui-automation",
+    "gui-testing",
+    "legacy",
+    "test-automation",
+    "claude",
+    "mcp"
+  ],
+  "server": {
+    "type": "binary",
+    "entry_point": "server/mcp-swing-17-server.jar",
+    "mcp_config": {
+      "command": "java",
+      "args": [
+        "-jar",
+        "${__dirname}/server/mcp-swing-17-server.jar"
+      ],
+      "env": {
+        "SWING_MCP_AGENT_JAR": "${__dirname}/server/mcp-swing-17-agent.jar"
+      }
+    }
+  },
+  "tools": [
+    { "name": "launch_app", "description": "Launch a Java desktop application JVM (Swing or JavaFX) with the automation agent preloaded" },
+    { "name": "attach_to_app", "description": "Attach the automation agent to a running Java desktop JVM (Swing or JavaFX) by PID" },
+    { "name": "stop_app", "description": "Stop the current application session" },
+    { "name": "list_sessions", "description": "List active application sessions" },
+    { "name": "select_session", "description": "Switch the active application session" },
+    { "name": "app_status", "description": "Report the status of the current session" },
+    { "name": "get_app_output", "description": "Read the stdout/stderr of a launched application" },
+    { "name": "take_snapshot", "description": "Snapshot the UI component tree with component UIDs (Swing or JavaFX)" },
+    { "name": "get_component_details", "description": "Get detailed properties of a component by UID" },
+    { "name": "find_component", "description": "Find components by text, name, tooltip, or class (Swing or JavaFX)" },
+    { "name": "get_table_data", "description": "Read the contents of a table (JTable or TableView)" },
+    { "name": "get_list_items", "description": "Read the items of a list or tree (JList/JTree or ListView/TreeView)" },
+    { "name": "list_windows", "description": "List open windows" },
+    { "name": "select_window", "description": "Bring a window to the front" },
+    { "name": "resize_window", "description": "Resize a window" },
+    { "name": "move_window", "description": "Move a window" },
+    { "name": "maximize_window", "description": "Maximize a window" },
+    { "name": "minimize_window", "description": "Minimize a window" },
+    { "name": "restore_window", "description": "Restore a window" },
+    { "name": "close_window", "description": "Close a window" },
+    { "name": "click", "description": "Click a component by UID" },
+    { "name": "hover", "description": "Hover over a component" },
+    { "name": "focus", "description": "Focus a component" },
+    { "name": "type_text", "description": "Type text via keyboard events" },
+    { "name": "fill", "description": "Set the value of a text field or spinner (Swing or JavaFX), or a Swing slider" },
+    { "name": "select_option", "description": "Select an option in a combo box, choice box, list or tab pane" },
+    { "name": "select_tree_node", "description": "Select a tree node by path (JTree or TreeView)" },
+    { "name": "select_table_cell", "description": "Select a table cell (JTable or TableView)" },
+    { "name": "select_menu_item", "description": "Invoke a menu item by path" },
+    { "name": "select_context_menu_item", "description": "Invoke a context (right-click) menu item" },
+    { "name": "press_key", "description": "Press a key or key combination" },
+    { "name": "drag", "description": "Drag from one component to another (Swing only)" },
+    { "name": "scroll", "description": "Scroll a component" },
+    { "name": "mouse_wheel", "description": "Turn the mouse wheel over a component" },
+    { "name": "list_dialogs", "description": "List open dialogs" },
+    { "name": "handle_dialog", "description": "Click a button in an open dialog" },
+    { "name": "get_clipboard", "description": "Read the system clipboard" },
+    { "name": "set_clipboard", "description": "Write to the system clipboard" },
+    { "name": "take_screenshot", "description": "Capture a screenshot of a window or component" },
+    { "name": "wait_for", "description": "Wait for a UI condition" },
+    { "name": "evaluate_java", "description": "Evaluate Java code in the target JVM (Swing sessions only; disabled by default)" }
+  ],
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ]
+  }
+}
