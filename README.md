@@ -5,7 +5,7 @@ MCP server and Java agent for automating Swing and JavaFX desktop applications, 
 
 - Version: `1.5.0-java17`
 - Upstream commit: `abfacfa`
-- License: MIT (see `LICENSE.md` / `LICENSE`)
+- License: MIT (see `LICENSE`)
 - Usage guide: [USAGE.md](USAGE.md)
 
 ## Contents

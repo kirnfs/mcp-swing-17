@@ -1,75 +1,75 @@
-# mcp-swing-17 — сборка и использование
+# mcp-swing-17 — build and usage
 
-MCP-сервер и агент для Java Swing/JavaFX на **JDK 17**. Примеры не привязаны к конкретному
-приложению: подставить путь к своему проекту и PID.
+MCP server and Java agent for Swing/JavaFX on **JDK 17**. Examples are application-agnostic:
+substitute your project path and PID.
 
-## 1. Требования
+## 1. Requirements
 
 - JDK 17;
-- Maven 3.9+ (или `build.ps1`, который скачает Maven 3.9.9);
-- Windows/Linux/macOS;
-- MCP-клиент с поддержкой stdio (LM Studio, Qwen Code, Claude Desktop, Cursor и т. п.).
+- Maven 3.9+ (or `build.ps1`, which downloads Maven 3.9.9);
+- Windows, Linux or macOS;
+- an MCP client with stdio support (LM Studio, Qwen Code, Claude Desktop, Cursor, etc.).
 
-## 2. Сборка
+## 2. Build
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1
 ```
 
-Результат:
+Output:
 
 ```
 dist/mcp-swing-17-server.jar
 dist/mcp-swing-17-agent.jar
 ```
 
-Через Maven без PowerShell:
+With Maven directly:
 
 ```bash
 mvn -s maven-settings.xml -DskipTests package
 ```
 
-## 3. Запуск MCP-сервера
+## 3. Start the MCP server
 
 ```powershell
 $env:SWING_MCP_AGENT_JAR = "$PWD\dist\mcp-swing-17-agent.jar"
 java -jar "$PWD\dist\mcp-swing-17-server.jar"
 ```
 
-Обычно сервер запускает MCP-клиент. Пример конфигурации:
+Usually the MCP client starts the server. Example configuration:
 
 ```json
 {
   "mcpServers": {
     "mcp-swing-17": {
       "command": "java",
-      "args": ["-jar", "<путь>/dist/mcp-swing-17-server.jar"],
+      "args": ["-jar", "<path>/dist/mcp-swing-17-server.jar"],
       "env": {
-        "SWING_MCP_AGENT_JAR": "<путь>/dist/mcp-swing-17-agent.jar"
+        "SWING_MCP_AGENT_JAR": "<path>/dist/mcp-swing-17-agent.jar"
       }
     }
   }
 }
 ```
 
-## 4. Подключение к приложению
+## 4. Attach to an application
 
-1. Запустите целевое Java-приложение на JDK 17+.
-2. Узнайте PID:
+1. Start the target Java application on JDK 17+.
+2. Find its PID:
 
 ```powershell
 Get-Process javaw -ErrorAction SilentlyContinue |
   Select-Object Id,MainWindowTitle
 ```
 
-3. В MCP-клиенте:
+3. In the MCP client:
 
 ```text
 attach_to_app(pid = <PID>)
 list_windows
 ```
 
-4. Дальше:
+4. Useful tools:
 
 ```text
 take_snapshot
@@ -84,40 +84,39 @@ take_screenshot
 close_window
 ```
 
-## 5. Важные инструменты
+## 5. Important tools
 
-- `take_screenshot(mode="PAINT")` — снимок содержимого окна без перекрытий и без заголовка.
-- `take_screenshot(mode="SCREEN")` — копия области экрана.
-- `activate_tree_node` — выбрать узел, раскрыть родителей и активировать его двойным кликом.
-  Нужен для ленивых деревьев, где дети загружаются только при активации.
-- `close_window` без аргументов закрывает **сфокусированный диалог**. Главное окно — только явным
-  `close_window(windowIndex=0)`.
-- `robot:true` по умолчанию отключён: реальная мышь и OS-клавиатура не перехватываются.
+- `take_screenshot(mode="PAINT")` — render the window content without overlaps or title bar.
+- `take_screenshot(mode="SCREEN")` — copy the screen region.
+- `activate_tree_node` — select a node, expand its ancestors and double-click it. Use it for lazy
+  trees whose children load only on activation.
+- `close_window` without arguments closes the **focused dialog** only. The main frame requires an
+  explicit `close_window(windowIndex=0)`.
+- `robot:true` is disabled by default: the real mouse and OS keyboard are not captured.
 
-## 6. Проверка
+## 6. Verify
 
 ```text
-list_windows    → список окон приложения
+list_windows    → application windows
 take_screenshot → PNG
 ```
 
-UID компонентов действуют в рамках одной MCP-сессии. После изменения UI берите свежий
-`take_snapshot`.
+Component UIDs are valid for one MCP session. Take a fresh `take_snapshot` after UI changes.
 
-## 7. Ошибки
+## 7. Troubleshooting
 
-| Симптом | Решение |
+| Symptom | Solution |
 |---|---|
-| `UnsupportedClassVersionError` | запускать на JDK 17+; использовать jar из `dist/` |
-| `Failed to parse request` | пересобрать проект через `build.ps1` |
-| attach не находит JVM | проверить PID и версию Java целевого процесса |
-| порт не создаётся | освободить диапазон `40000…40100` |
-| скриншот пустой | использовать `take_screenshot(mode="PAINT")` |
-| `Robot input is disabled` | не использовать `robot:true`; это безопасный режим |
+| `UnsupportedClassVersionError` | run on JDK 17+ and use jars from `dist/` |
+| `Failed to parse request` | rebuild with `build.ps1` |
+| attach cannot find the JVM | check the PID and target Java version |
+| port cannot be bound | free the `40000…40100` range |
+| screenshot is empty | use `take_screenshot(mode="PAINT")` |
+| `Robot input is disabled` | do not use `robot:true`; this is the safe default |
 
-## 8. Безопасность
+## 8. Security
 
-- только loopback;
-- `evaluate_java` не включать;
-- не встраивать агент в production-приложение;
-- не передавать token/response-файл третьим лицам.
+- loopback only;
+- keep `evaluate_java` disabled;
+- do not embed the agent in a production application;
+- do not share the token or the response file.

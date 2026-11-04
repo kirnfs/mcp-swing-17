@@ -71,4 +71,4 @@ Please use the [issue templates](https://github.com/crosstech-solutions-bv/swing
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the [MIT License](LICENSE.md).
+By contributing, you agree that your contributions will be licensed under the [MIT License](LICENSE).
