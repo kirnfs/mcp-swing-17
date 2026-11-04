@@ -7,5 +7,15 @@
     "url": "https://github.com/kirnfs/mcp-swing-17",
     "source": "github"
   },
-  "version": "1.5.0-java17"
+  "version": "1.5.0-java17",
+  "packages": [
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/kirnfs/mcp-swing-17/releases/download/v1.5.0-java17/mcp-swing-17-1.5.0-java17.mcpb",
+      "fileSha256": "05815c9f53042b313902ab091e1e36d705ff8af53ee86a731abb477b3e87cadd",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
 }

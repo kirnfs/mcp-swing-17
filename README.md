@@ -13,6 +13,7 @@ MCP server and Java agent for automating Swing and JavaFX desktop applications, 
 ```
 dist/mcp-swing-17-server.jar    MCP server (stdio)
 dist/mcp-swing-17-agent.jar     Java agent loaded into the target JVM
+dist/*.mcpb                      MCPB bundle for one-click clients
 build.ps1                       Windows build (JDK 17)
 build.sh                        Linux/macOS build
 mcp-swing-17-server/            server sources
